@@ -6,17 +6,17 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'Index',
+    name: 'index',
     component: () => import('@/views/Index.vue'),
   },
   {
     path: '/profile',
-    name: 'Profile',
+    name: 'profile',
     component: () => import('@/views/Profile.vue'),
   },
   {
     path: '/contacts',
-    name: 'Contacts',
+    name: 'contacts',
     component: () => import('@/views/Contacts.vue'),
   },
 ];

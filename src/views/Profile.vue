@@ -1,3 +1,14 @@
 <template>
-  <h1>Привет, Сергей!</h1>
+  <div>
+    <nav-bar />
+  </div>
 </template>
+
+<script>
+  import NavBar from '@/components/NavBar.vue';
+  export default {
+    components: {
+      NavBar,
+    },
+  };
+</script>
