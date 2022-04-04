@@ -12,11 +12,7 @@
             <router-link class="link header__link" :to="{ name: 'contacts' }">
               Контакты
             </router-link>
-            <router-link class="link header__link" :to="{ name: 'profile' }">
-              <form class="form" action="./index.html">
-                <button class="button header__button">Войти</button>
-              </form>
-            </router-link>
+            <button class="button header__button button-login" @click="changeView">Войти</button>
           </li>
         </ul>
       </nav>
@@ -27,14 +23,22 @@
 <script>
   export default {
     name: 'nav-bar',
+    methods: {
+      changeView() {
+        this.$router.push('/profile');
+      },
+    },
   };
 </script>
 
 <style lang="sass" scoped>
+  @import '../styles/block.sass'
+  @import '../styles/_media'
   .header
     background-color: var(--white-color)
     height: 4.9375em
     border-bottom: 1px solid var(--black-color)
+
 
   .header__container
     max-width: 1298.27px
@@ -67,4 +71,7 @@
     color: var(--button-color)
     cursor: pointer
     border-radius: 7px
+    text-decoration: none
+
+  @include responsive
 </style>
