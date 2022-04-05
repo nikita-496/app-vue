@@ -1,31 +1,56 @@
 <template>
-  <header class="header">
-    <div class="container header__container">
-      <nav class="header__nav">
-        <ul class="list header__list">
-          <li class="list__item">
-            <router-link class="index" :to="{ name: 'index' }">
-              <img class="logo-img heder__logo-img" src="../assets/logo.png" alt="Логотип сайта" />
-            </router-link>
-          </li>
-          <li class="list__item">
-            <router-link class="link header__link" :to="{ name: 'contacts' }">
-              Контакты
-            </router-link>
-            <button class="button header__button button-login" @click="changeView">Войти</button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <div>
+    <modal-window
+      v-if="isModalWindowOpen"
+      :statusModalWindow="isModalWindowOpen"
+      @close="changeStatusModalWindow"
+    />
+    <header class="header">
+      <div class="container header__container">
+        <nav class="header__nav">
+          <ul class="list header__list">
+            <li class="list__item">
+              <router-link class="index" :to="{ name: 'index' }">
+                <img
+                  class="logo-img heder__logo-img"
+                  src="../assets/logo.png"
+                  alt="Логотип сайта"
+                />
+              </router-link>
+            </li>
+            <li class="list__item">
+              <router-link class="link header__link" :to="{ name: 'contacts' }">
+                Контакты
+              </router-link>
+              <button class="button header__button button-login" @click="changeStatusModalWindow">
+                Войти
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  </div>
 </template>
 
 <script>
+  import ModalWindow from '@/components/ModalWindow.vue';
   export default {
+    components: {
+      ModalWindow,
+    },
     name: 'nav-bar',
+
+    data() {
+      return {
+        isModalWindowOpen: false,
+      };
+    },
     methods: {
-      changeView() {
-        this.$router.push('/profile');
+      changeStatusModalWindow() {
+        return this.isModalWindowOpen
+          ? (this.isModalWindowOpen = false)
+          : (this.isModalWindowOpen = true);
       },
     },
   };

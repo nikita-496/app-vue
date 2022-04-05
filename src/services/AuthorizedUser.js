@@ -3,16 +3,17 @@ import StorageManager from './StorageManager';
 class AuthorizedUser {
   _isAuthorized = false;
   _name = null;
-  constructor(login) {
-    //this._login = login;
+  /*constructor() {
     this._name = AuthorizedUser.getName();
-  }
+  }*/
 
   get name() {
     return this._name;
   }
 
-  set authorizedUser(users) {
+  set authorizedUser(login) {
+    console.log(login);
+    const users = StorageManager.getAllUsers();
     const parsedUsers = JSON.parse(users).users;
     const validUser = parsedUsers.filter((user) => user.login === login);
     StorageManager.setUsers('authorizedUser', validUser);

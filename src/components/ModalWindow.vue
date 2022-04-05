@@ -2,17 +2,17 @@
   <transition name="fade" appear>
     <div class="modal-window">
       <div class="modal-window__body">
-        <snack-bar />
+        <snack-bar v-if="errorText" :errorMessage="errorText" />
         <form class="modal-window__form" @click.prevent="">
           <a class="modal-window__form-close" @click="changeStatus">x</a>
           <h2 class="modal-window__title">Авторизация</h2>
           <div class="form__item">
             <label class="label label__login" for="login">Логни</label>
-            <input type="text" class="input input__name" v-model="login" />
+            <input type="text" class="input input__name" v-model="user.login" />
           </div>
           <div class="form__item">
             <label class="label label__password" for="name">Пароль</label>
-            <input type="password" class="input input__password" v-model="password" />
+            <input type="password" class="input input__password" v-model="user.password" />
             <img class="password__type" src="../assets/open.png" alt="Показать пароль" />
           </div>
 
@@ -32,13 +32,19 @@
 
 <script>
   import SnackBar from './SnackBar.vue';
+  import AuthorizedUser from '../services/AuthorizedUser';
+  import Validator from '../services/Validator';
+  import messages from '../data/messages';
   export default {
     components: { SnackBar },
     name: 'modal-window',
     data() {
       return {
-        login: '',
-        password: '',
+        user: {
+          login: '',
+          password: '',
+        },
+        errorText: '',
       };
     },
     methods: {
@@ -46,7 +52,31 @@
         this.$emit('close');
       },
       logIn() {
-        this.$router.push('/profile');
+        if (this.handleEdgeCases()) {
+          return;
+        }
+
+        const validator = new Validator();
+        validator.isValidData = { login: this.user.login, password: this.user.password };
+
+        if (validator.isValidData) {
+          const currentUser = new AuthorizedUser();
+          currentUser.authorizedUser = this.login;
+          this.$router.push('/profile');
+        } else {
+          return (this.errorText = messages.notExist);
+        }
+      },
+      handleEdgeCases() {
+        if (!this.user.login || !this.user.password) {
+          if (!this.user.login && !this.user.password) {
+            return (this.errorText = messages.allRequired);
+          } else if (!this.user.login) {
+            return (this.errorText = messages.loginRequired);
+          } else if (!this.user.password) {
+            return (this.errorText = messages.passwordRequired);
+          }
+        }
       },
     },
   };

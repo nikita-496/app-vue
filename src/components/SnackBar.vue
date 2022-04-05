@@ -1,12 +1,17 @@
 <template>
   <div class="snackbar" id="snackbar">
-    <span class="snackbar__message"></span>
+    <span class="snackbar__message">{{ errorMessage }}</span>
   </div>
 </template>
 
 <script>
   export default {
     name: 'snack-bar',
+    props: {
+      errorMessage: {
+        type: String,
+      },
+    },
   };
 </script>
 

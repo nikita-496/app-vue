@@ -10,14 +10,18 @@ class Validator {
     return parsedUsers.users.filter((user) => user.login === login && user.password === password);
   }
 
-  validateInputData(login, password) {
+  set isValidData(value) {
+    console.log(value);
     const users = StorageManager.getAllUsers();
-    const searchedUser = searchInputData(login, password, users);
+    const searchedUser = Validator.searchInputData(value.login, value.password, users);
     if (searchedUser[0]) {
       return (this._isValidData = true);
     }
   }
 
+  get isValidData() {
+    return this._isValidData;
+  }
   validatePassword(password) {
     const regex = new RegExp(this._pattern);
     regex.test(password) ? (this._isValidPassword = true) : this._isValidPassword;
