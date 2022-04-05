@@ -1,28 +1,33 @@
 <template>
-  <div class="modal-window">
-    <div class="modal-window__body">
-      <snack-bar />
-      <form class="modal-window__form" action="./profile.html">
-        <a class="modal-window__form-close">x</a>
-        <h2 class="modal-window__title">Авторизация</h2>
-        <div class="form__item">
-          <label class="label label__login" for="login">Логни</label>
-          <input type="text" class="input input__name" />
-        </div>
-        <div class="form__item">
-          <label class="label label__password" for="name">Пароль</label>
-          <input type="password" class="input input__password" />
-          <img class="password__type" src="../assets/open.png" alt="Показать пароль" />
-        </div>
+  <transition name="fade" appear>
+    <div class="modal-window">
+      <div class="modal-window__body">
+        <snack-bar />
+        <form class="modal-window__form" @click.prevent="">
+          <a class="modal-window__form-close" @click="changeStatus">x</a>
+          <h2 class="modal-window__title">Авторизация</h2>
+          <div class="form__item">
+            <label class="label label__login" for="login">Логни</label>
+            <input type="text" class="input input__name" v-model="login" />
+          </div>
+          <div class="form__item">
+            <label class="label label__password" for="name">Пароль</label>
+            <input type="password" class="input input__password" v-model="password" />
+            <img class="password__type" src="../assets/open.png" alt="Показать пароль" />
+          </div>
 
-        <div class="form__action">
-          <button class="button button__action-group button__action-group_theme_continue">
-            Продолжить
-          </button>
-        </div>
-      </form>
+          <div class="form__action">
+            <button
+              class="button button__action-group button__action-group_theme_continue"
+              @click="logIn"
+            >
+              Продолжить
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -30,10 +35,26 @@
   export default {
     components: { SnackBar },
     name: 'modal-window',
+    data() {
+      return {
+        login: '',
+        password: '',
+      };
+    },
+    methods: {
+      changeStatus() {
+        this.$emit('close');
+      },
+      logIn() {
+        this.$router.push('/profile');
+      },
+    },
   };
 </script>
 
 <style lang="sass" scoped>
+  @import '../styles/_media'
+
   .modal-window
     position: fixed
     width: 100%
@@ -41,14 +62,9 @@
     background-color: rgba(0, 0, 0, 0.3)
     top: 0
     left: 0
-    opacity: 0
-    visibility: hidden
-
+    opacity: 1
+    visibility: visible
     transition: all 0.5s ease 0s
-
-  .modal-window_open
-   opacity: 1
-   visibility: visible
 
   .modal-window__body
     min-height: 100%
@@ -56,7 +72,7 @@
     flex-direction: column
     align-items: center
     justify-content: center
-    padding: 1.875em 0.625em
+    padding-top: 1em
 
   .modal-window__form
     display: flex
@@ -106,7 +122,6 @@
     height: 2em
     outline: none
 
-
   .input__name
     margin-left: 2.5em
 
@@ -139,4 +154,15 @@
     width: 12.5em
     height: 3.5em
     padding: 0.8em 0.5em
+    border: none
+
+  .fade-enter-active,
+  .fade-leave-active
+    transition: opacity .5s
+
+  .fade-enter,
+  .fade-leave-to
+    opacity: 0
+
+  @include responsive
 </style>

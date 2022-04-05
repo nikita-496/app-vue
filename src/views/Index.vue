@@ -1,11 +1,19 @@
 <template>
   <div>
     <nav-bar />
+    <modal-window
+      v-if="isModalWindowOpen"
+      :statusModalWindow="isModalWindowOpen"
+      @close="changeStatusModalWindow"
+    />
     <main-content>
       <template v-slot:title>
-        <h1 class="title index__title">Место для получения медицинской помощи</h1>
+        <h1 class="title index__title">Место для получения <br />медицинской помощи</h1>
         <div class="action">
-          <button class="button button__action-group button__action-group_theme_login button-login">
+          <button
+            class="button button__action-group button__action-group_theme_login button-login"
+            @click="changeStatusModalWindow"
+          >
             Войти
           </button>
           <button
@@ -41,7 +49,6 @@
         </ul>
       </template>
     </main-content>
-    <modal-window />
   </div>
 </template>
 
@@ -58,6 +65,7 @@
     },
     data() {
       return {
+        isModalWindowOpen: false,
         cards: [
           {
             id: '1',
@@ -84,6 +92,11 @@
       changeView() {
         this.$router.push('/contacts');
       },
+      changeStatusModalWindow() {
+        return this.isModalWindowOpen
+          ? (this.isModalWindowOpen = false)
+          : (this.isModalWindowOpen = true);
+      },
     },
   };
 </script>
@@ -91,6 +104,7 @@
 <style lang="sass" scoped>
   @import '../styles/_media'
   @import '../styles/block.sass'
+
   .index__title
     font-size: 3.625rem
     font-family: var(--main-font)

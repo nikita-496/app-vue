@@ -12,7 +12,7 @@
 
 <style lang="sass" scoped>
   .snackbar
-    display: none
+    display: block
     width: 70%
     background-color: #FF5252
     box-shadow: 0px 13px 25px 0px rgba(0, 0, 0, 0.3)
