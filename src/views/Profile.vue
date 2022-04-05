@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div v-if="user">
     <nav-bar />
     <main-content>
       <template v-slot:title>
-        <h1 class="title profile__title">Привет, {{ user ? user : 'гость' }}!</h1>
+        <h1 class="title profile__title">Привет, {{ user }} !</h1>
         <div class="action">
           <button
             class="button button__action-group-profile button__action-group-profile_theme_logout"
@@ -19,6 +19,16 @@
             Перейти в контакты
           </button>
         </div>
+      </template>
+    </main-content>
+  </div>
+  <div v-else>
+    <main-content>
+      <template v-slot:title>
+        <h1 class="message__title">
+          Пожалуйста, пройдите
+          <router-link class="index" :to="{ name: 'index' }"> авторизацию </router-link>
+        </h1>
       </template>
     </main-content>
   </div>
@@ -44,6 +54,8 @@
     mounted() {
       const authorizedUser = new AuthorizedUser();
       this.user = authorizedUser.name;
+      if (this.user) {
+      }
     },
     methods: {
       changeViewOnContacts() {
@@ -59,13 +71,17 @@
 
 <style lang="sass" scoped>
   @import '../styles/_media'
-  .profile__title
+  .profile__title, .message__title
     font-size: 3.625rem
     font-family: var(--main-font)
     color: var(--primary-text-color)
     line-height: 1.3794em
     width: 12.534em
     padding-top: 2.43103em
+
+  .message__title
+    font-size: 1.8rem
+    width: 20.534em
 
   .button__action-group-profile
     font-size: 0.875rem
