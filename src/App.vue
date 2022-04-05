@@ -7,7 +7,7 @@
   import users from './data/users.json';
   export default {
     mounted() {
-      StorageManager.getAllUsers('users', users);
+      StorageManager.setUsers('users', users);
     },
   };
 </script>

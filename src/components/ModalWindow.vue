@@ -12,8 +12,17 @@
           </div>
           <div class="form__item">
             <label class="label label__password" for="name">Пароль</label>
-            <input type="password" class="input input__password" v-model="user.password" />
-            <img class="password__type" src="../assets/open.png" alt="Показать пароль" />
+            <input
+              :type="hidePassword ? 'password' : 'text'"
+              class="input input__password"
+              v-model="user.password"
+            />
+            <img
+              class="password__type"
+              :src="icon"
+              :alt="hidePassword ? 'Показать пароль' : 'Скрыть пароль'"
+              @click="changeTypePassword"
+            />
           </div>
 
           <div class="form__action">
@@ -45,7 +54,12 @@
           password: '',
         },
         errorText: '',
+        hidePassword: true,
+        icon: '',
       };
+    },
+    mounted() {
+      this.icon = require('../assets/open.png');
     },
     methods: {
       changeStatus() {
@@ -57,11 +71,17 @@
         }
 
         const validator = new Validator();
+        validator.isValidPassword = this.user.password;
+        console.log(validator.isValidPassword);
+        if (!validator.isValidPassword) {
+          return (this.errorText = messages.passwordRequirements);
+        }
+
         validator.isValidData = { login: this.user.login, password: this.user.password };
 
         if (validator.isValidData) {
           const currentUser = new AuthorizedUser();
-          currentUser.authorizedUser = this.login;
+          currentUser.authorizedUser = this.user.login;
           this.$router.push('/profile');
         } else {
           return (this.errorText = messages.notExist);
@@ -76,6 +96,14 @@
           } else if (!this.user.password) {
             return (this.errorText = messages.passwordRequired);
           }
+        }
+      },
+      changeTypePassword() {
+        this.hidePassword = !this.hidePassword;
+        if (this.hidePassword) {
+          this.icon = require('../assets/open.png');
+        } else {
+          this.icon = require('../assets/hide.png');
         }
       },
     },
@@ -183,7 +211,7 @@
     margin-right: 0.714em
     width: 12.5em
     height: 3.5em
-    padding: 0.8em 0.5em
+    padding: 0.2em 0.5em
     border: none
 
   .fade-enter-active,

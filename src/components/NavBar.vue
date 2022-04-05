@@ -23,7 +23,7 @@
                 Контакты
               </router-link>
               <button class="button header__button button-login" @click="changeStatusModalWindow">
-                Войти
+                {{ buttonInner }}
               </button>
             </li>
           </ul>
@@ -35,6 +35,8 @@
 
 <script>
   import ModalWindow from '@/components/ModalWindow.vue';
+  import AuthorizedUser from '@/services/AuthorizedUser';
+  import StorageManager from '@/services/StorageManager';
   export default {
     components: {
       ModalWindow,
@@ -44,13 +46,38 @@
     data() {
       return {
         isModalWindowOpen: false,
+        isAuthorized: false,
       };
+    },
+    mounted() {
+      const authorizedUser = new AuthorizedUser();
+      if (authorizedUser.name) {
+        return (this.isAuthorized = true);
+      }
+    },
+    computed: {
+      buttonInner: function () {
+        return this.isAuthorized ? 'Выйти' : 'Войти';
+      },
     },
     methods: {
       changeStatusModalWindow() {
+        if (this.isAuthorized) {
+          this.logOut();
+          return;
+        }
         return this.isModalWindowOpen
           ? (this.isModalWindowOpen = false)
           : (this.isModalWindowOpen = true);
+      },
+      logOut() {
+        StorageManager.removeAuthorizedUser();
+        if (this.$route.path === '/') {
+        } else {
+          this.$router.push('/');
+        }
+        this.isAuthorized = false;
+        this.$emit('logout');
       },
     },
   };
@@ -80,6 +107,7 @@
 
   .heder__logo-img
     align-self: center
+
 
   .header__link
     font-size: 0.9375rem

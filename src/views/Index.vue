@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav-bar />
+    <nav-bar @logout="isAuthorized = !isAuthorized" />
     <modal-window
       v-if="isModalWindowOpen"
       :statusModalWindow="isModalWindowOpen"
@@ -11,6 +11,14 @@
         <h1 class="title index__title">Место для получения <br />медицинской помощи</h1>
         <div class="action">
           <button
+            v-if="isAuthorized"
+            class="button button__action-group button__action-group_theme_login button-login"
+            @click="() => $router.push('/profile')"
+          >
+            В кабинет
+          </button>
+          <button
+            v-else
             class="button button__action-group button__action-group_theme_login button-login"
             @click="changeStatusModalWindow"
           >
@@ -56,6 +64,9 @@
   import NavBar from '@/components/NavBar.vue';
   import MainContent from '@/components/MainContent.vue';
   import ModalWindow from '@/components/ModalWindow.vue';
+  import AuthorizedUser from '@/services/AuthorizedUser';
+
+  import cardsData from '../data/cards.js';
 
   export default {
     components: {
@@ -65,28 +76,17 @@
     },
     data() {
       return {
+        cards: [],
         isModalWindowOpen: false,
-        cards: [
-          {
-            id: '1',
-            name: 'Онлайн-прием',
-            src: require('../assets/heart.png'),
-            alt: 'Кардиограмма сердца',
-          },
-          {
-            id: '2',
-            name: 'Экстренный Случай',
-            src: require('../assets/stethoscope.png'),
-            alt: 'Стетоскоп',
-          },
-          {
-            id: '3',
-            name: 'Лечение рака',
-            src: require('../assets/form.png'),
-            alt: 'Бланк',
-          },
-        ],
+        isAuthorized: false,
       };
+    },
+    mounted() {
+      const authorizedUser = new AuthorizedUser();
+      if (authorizedUser.name) {
+        this.isAuthorized = true;
+      }
+      this.cards = cardsData;
     },
     methods: {
       changeView() {
@@ -96,6 +96,9 @@
         return this.isModalWindowOpen
           ? (this.isModalWindowOpen = false)
           : (this.isModalWindowOpen = true);
+      },
+      change() {
+        console.log('вышел');
       },
     },
   };

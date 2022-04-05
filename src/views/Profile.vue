@@ -3,7 +3,7 @@
     <nav-bar />
     <main-content>
       <template v-slot:title>
-        <h1 class="title profile__title">Привет, Сергей!</h1>
+        <h1 class="title profile__title">Привет, {{ user ? user : 'гость' }}!</h1>
         <div class="action">
           <button
             class="button button__action-group-profile button__action-group-profile_theme_logout"
@@ -27,16 +27,30 @@
 <script>
   import NavBar from '@/components/NavBar.vue';
   import MainContent from '@/components/MainContent.vue';
+  import AuthorizedUser from '@/services/AuthorizedUser';
+  import StorageManager from '@/services/StorageManager';
+  import ModalWindow from '@/components/ModalWindow.vue';
   export default {
     components: {
       NavBar,
       MainContent,
+      ModalWindow,
+    },
+    data() {
+      return {
+        user: '',
+      };
+    },
+    mounted() {
+      const authorizedUser = new AuthorizedUser();
+      this.user = authorizedUser.name;
     },
     methods: {
       changeViewOnContacts() {
         this.$router.push('/contacts');
       },
       changeViewOnIndex() {
+        StorageManager.removeAuthorizedUser();
         this.$router.push('/');
       },
     },
@@ -74,7 +88,7 @@
     margin-right: 0.714em
 
   .button__action-group-profile_theme_contacts
-    color: var(--black-color)
+    color: var(--button-color)
 
   @include responsive
 </style>
